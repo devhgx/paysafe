@@ -32,9 +32,9 @@ public class TransactionController {
         var jwt = jwtUtil.getClaims();
         String role = jwt.getRole();
         Long userId = jwt.getUserId();
-        int processStatus = TransactionProcessStatus.ADMIN_APPROVE;
+        int processStatus = TransactionProcessStatus.USER_APPROVE;
         if (role.equals(RoleType.ADMIN)) {
-            processStatus = TransactionProcessStatus.USER_APPROVE;
+            processStatus = TransactionProcessStatus.ADMIN_APPROVE;
         }
         var data = transactionService.getTransactions( pageNumber, pageSize, processStatus, userId);
         return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
