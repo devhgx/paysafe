@@ -23,10 +23,10 @@ public class OpenApiConfig {
                         addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes
                         ("Bearer Authentication", createAPIKeyScheme()))
-                .info(new Info().title("My REST API")
-                        .description("Some custom description of API.")
-                        .version("1.0").contact(new Contact().name("Sallo Szrajbman")
-                                .email( "www.baeldung.com").url("salloszraj@gmail.com"))
+                .info(new Info().title("Paysafe REST API")
+                        .description("")
+                        .version("1.0").contact(new Contact().name("tai")
+                                .email( "kridsadakorntip@gosoft.co.th").url("kridsadakorntip@gosoft.co.th"))
                         .license(new License().name("License of API")
                                 .url("API license URL")));
     }

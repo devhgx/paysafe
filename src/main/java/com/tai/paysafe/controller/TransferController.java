@@ -46,14 +46,6 @@ public class TransferController {
         return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
     }
 
-//    @PostMapping("/approveFromAdmin")
-//    @PreAuthorize("hasRole('ROLE_USER')")
-//    public ResponseEntity<ResponseData> approveFromAdmin() throws Exception {
-//        Long userId = jwtUtil.getClaims().getUserId();
-//        transactionService.adminApprove();
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
-//    }
-
     @PostMapping("/approve")
     @PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseData> approveFromUser(@Valid @RequestBody ApproveRequest approveRequest) throws Exception {

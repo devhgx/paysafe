@@ -17,8 +17,8 @@ import org.webjars.NotFoundException;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
                 new Date(),
                 null
         ));
-        var bank = bankRepository.findById(request.getBankId()).orElseThrow(() -> new NotFoundException("not found bank id = "+ request.getBankId()));
+        var bank = bankRepository.findById(request.getBankId()).orElseThrow(() -> new NotFoundException("not found bank id = " + request.getBankId()));
         var userBank = new UserBank();
         userBank.setBank(bank);
         userBank.setAccountBankNumber(request.getAccountBankNumber());
@@ -78,7 +78,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).orElse( null);
+        var user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            var userNank = userBankRepository.findByUserId(user.getId()).orElse(List.of());
+            user.setUserBanks(new HashSet<>(userNank));
+        }
+        return user;
     }
 
     @Override

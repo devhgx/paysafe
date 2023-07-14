@@ -172,9 +172,23 @@ public class TransactionServiceImpl implements TransactionService {
         Sort sort = Sort.by("id").descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         if (processStatus == TransactionProcessStatus.USER_APPROVE) {
-            return transactionRepository.findAllByUser(processStatus, userId, pageable);
+            return transactionRepository.findAllActiveByUser(processStatus, userId, pageable);
         }
-        return transactionRepository.findAllByAdmin(processStatus, pageable);
+        return transactionRepository.findAllActiveByAdmin(processStatus, pageable);
+    }
+
+    @Override
+    public Page<Transaction> getTransactionsAll(int pageNumber, int pageSize, String role, Long userId) {
+        if (pageNumber < 0 || pageSize < 0) {
+            log.error("limit or page = 0");
+            throw new BadRequstException("limit or page = 0");
+        }
+        Sort sort = Sort.by("id").descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        if (role.equals(RoleType.USER)) {
+            return transactionRepository.findAllStatusByUser(userId, pageable);
+        }
+        return transactionRepository.findAllStatusByAdmin(userId, pageable);
     }
 
 }

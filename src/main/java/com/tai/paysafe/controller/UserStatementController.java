@@ -20,17 +20,6 @@ public class UserStatementController {
     @Qualifier("userStatementServiceImpl")
     private UserStatementService userStatementService;
 
-//    @PostMapping
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public ResponseEntity<?> createStatement(@RequestBody UserStatement userStatement) {
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", userStatementService.createStatement(userStatement)));
-//    }
-
-//    @GetMapping("/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public ResponseEntity<?> getStatement(@PathVariable Long id) {
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", userStatementService.getStatementById(id)));
-//    }
 
     @GetMapping("/listActive")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
@@ -48,22 +37,4 @@ public class UserStatementController {
         return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", userStatementService.getStatementAllStatusByUser(pageNumber,pageSize,userId)));
     }
 
-//    @GetMapping
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public ResponseEntity<?> getAllStatements() {
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", userStatementService.getAllStatements()));
-//    }
-
-//    @PutMapping
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public ResponseEntity<?> updateStatement(@RequestBody UserStatement userStatement) {
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", userStatementService.updateStatement(userStatement)));
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public ResponseEntity<?> deleteStatement(@PathVariable Long id) {
-//        userStatementService.deleteStatement(id);
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
-//    }
 }

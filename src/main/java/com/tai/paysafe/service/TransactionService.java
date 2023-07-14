@@ -11,4 +11,6 @@ public interface TransactionService {
     Transaction transfer(TransferRequest transferRequest, Long userId) ;
     Transaction approve(Long id, Long userId, String role);
     Page<Transaction> getTransactions(int pageNumber, int pageSize, int processStatus, Long userId);
+
+    Page<Transaction> getTransactionsAll(int pageNumber, int pageSize, String role, Long userId);
 }

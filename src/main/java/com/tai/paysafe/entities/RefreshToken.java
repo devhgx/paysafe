@@ -1,5 +1,6 @@
 package com.tai.paysafe.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Data
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RefreshToken  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -42,16 +42,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseData(HttpStatus.OK.value(), "success", data));
     }
 
-    @PostMapping("/registerAdmin")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseData> registerAdmin(@Valid @RequestBody RegistrationRequest registrationRequest) {
-        User data = userService.create(registrationRequest, RoleType.ADMIN);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
-    }
+//    @PostMapping("/registerAdmin")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public ResponseEntity<ResponseData> registerAdmin(@Valid @RequestBody RegistrationRequest registrationRequest) {
+//        User data = userService.create(registrationRequest, RoleType.ADMIN);
+//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+//    }
 
     // get user profile
     @GetMapping("/getProfile")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseData> getProfile() {
         Long userId = jwtUtil.getClaims().getUserId();
         User data = userService.findById(userId);
@@ -63,22 +63,6 @@ public class UserController {
     public ResponseEntity<ResponseData> getUserBanks() {
         Long userId = jwtUtil.getClaims().getUserId();
         List<UserBank> data = userService.getUserBanks(userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
-    }
-
-    @DeleteMapping("/deleteBookBank")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseData> deleteBookBank() throws Exception {
-        Long userId = jwtUtil.getClaims().getUserId();
-        userService.deleteUserBank(userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
-    }
-
-    @GetMapping("/statement")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseData> statement() {
-        Long userId = jwtUtil.getClaims().getUserId();
-        UserStatement data = userStatementService.getStatementByUserId(userId);
         return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
     }
 

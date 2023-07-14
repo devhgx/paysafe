@@ -32,11 +32,21 @@ public class TransactionController {
         var jwt = jwtUtil.getClaims();
         String role = jwt.getRole();
         Long userId = jwt.getUserId();
+        int processStatus = TransactionProcessStatus.ADMIN_APPROVE;
         if (role.equals(RoleType.ADMIN)) {
-            var data = transactionService.getTransactions(pageNumber, pageSize, TransactionProcessStatus.ADMIN_APPROVE, userId);
-            return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+            processStatus = TransactionProcessStatus.USER_APPROVE;
         }
-        var data = transactionService.getTransactions( pageNumber, pageSize, TransactionProcessStatus.USER_APPROVE, userId);
+        var data = transactionService.getTransactions( pageNumber, pageSize, processStatus, userId);
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+    }
+
+    @GetMapping("/listAll/{pageNumber}/{pageSize}")
+    @PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseData> transactionsListAll(@Valid @PathVariable("pageNumber") int pageNumber ,@Valid @PathVariable("pageSize") int pageSize) throws Exception {
+        var jwt = jwtUtil.getClaims();
+        String role = jwt.getRole();
+        Long userId = jwt.getUserId();
+        var data = transactionService.getTransactionsAll( pageNumber, pageSize, role, userId);
         return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
     }
 }
