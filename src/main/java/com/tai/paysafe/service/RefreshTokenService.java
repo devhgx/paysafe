@@ -32,13 +32,12 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
-    public int deleteRefreshToken(Long userId) {
+    public Long deleteRefreshToken(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent()) {
             throw new NotFoundException("user not found");
         }
-        int data = refreshTokenRepository.deleteByUserId(userId);
-        return data;
+        return refreshTokenRepository.deleteByUserId(userId);
     }
 
     public RefreshToken createRefreshToken(Long userId) {

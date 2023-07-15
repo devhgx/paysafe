@@ -46,6 +46,7 @@ public class AuthenController {
     }
 
     @PostMapping("/refreshToken")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
         return refreshTokenService.findByToken(requestRefreshToken).map(refreshTokenService::verifyExpiration).map(RefreshToken::getUser).map(user -> {

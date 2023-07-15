@@ -26,7 +26,6 @@ import org.webjars.NotFoundException;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -75,22 +74,36 @@ public class TransactionServiceImpl implements TransactionService {
         log.info("------------ updateBalanceTransferLastApprove fromUserId id = " + fromUserId + "toUserId id = " + toUserId);
         var existFromUserId = userStatementRepository.findByUserAndActiveStatus(fromUserId, true).orElse(null);
         var existToUserId = userStatementRepository.findByUserAndActiveStatus(toUserId, true).orElse(null);
-        existFromUserId.setActiveStatus(false);
-        existFromUserId.setUpdatedDate(new Date());
-        existToUserId.setActiveStatus(false);
-        existToUserId.setUpdatedDate(new Date());
-        userStatementRepository.saveAll(List.of(existFromUserId, existToUserId));
+        if (existFromUserId != null) {
+            existFromUserId.setActiveStatus(false);
+            existFromUserId.setUpdatedDate(new Date());
+            userStatementRepository.save(existFromUserId);
+        }
+        if (existToUserId != null) {
+            existToUserId.setActiveStatus(false);
+            existToUserId.setUpdatedDate(new Date());
+            userStatementRepository.save(existToUserId);
+        }
+
         // From
         var fromBalance = existFromUserId.getBalance().subtract(amount);
+        var income = BigDecimal.ZERO;
+        var expense= BigDecimal.ZERO;
         if (fromBalance.compareTo(BigDecimal.ZERO) < 0) {
             log.error("cannot withdraw , balance less than " + amount);
             throw new WithdrawException("cannot withdraw , balance less than " + amount);
         }
         userStatementRepository.save(new UserStatement(0L, fromBalance, existFromUserId.getIncome(), existFromUserId.getExpense().add(amount), true, fromUserId, new Date(), null));
         // To
-        var toBalance = existToUserId.getBalance().add(amount);
-
-        userStatementRepository.save(new UserStatement(0L, toBalance, existToUserId.getIncome().add(amount), existFromUserId.getExpense(), true, toUserId, new Date(), null));
+        var toBalance = amount;
+        income = BigDecimal.ZERO;
+        expense= BigDecimal.ZERO;
+        if (existToUserId != null) {
+            toBalance = existToUserId.getBalance().add(amount);
+            income = existToUserId.getIncome().add(amount);
+            expense = existToUserId.getExpense();
+        }
+        userStatementRepository.save(new UserStatement(0L, toBalance, income,expense, true, toUserId, new Date(), null));
 
         return null;
     }
@@ -125,10 +138,10 @@ public class TransactionServiceImpl implements TransactionService {
         var senderUser = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("not found sender user " + userId));
         var recipientUser = userRepository.findByUsername(transferRequest.getRecipientUserName()).orElseThrow(() -> new NotFoundException("not found recipient  user " + userId));
         var adminUser = userRepository.findByRole(RoleType.ADMIN).orElseThrow(() -> new NotFoundException("not found recipient  user " + userId));
-        var transaction = new Transaction(0L, TransactionType.TRANSFER, transferRequest.getAmount(), false, TransactionProcessStatus.USER_APPROVE, null, null, null, null, senderUser, recipientUser, transferRequest.getNote(), new Date(), null);
+        var transaction = new Transaction(0L, TransactionType.TRANSFER, transferRequest.getAmount(), false, TransactionProcessStatus.ADMIN_APPROVE, null, null, null, null, senderUser, recipientUser, transferRequest.getNote(), new Date(), null);
         transaction = transactionRepository.save(transaction);
         //recipientConfirm
-        confirmationRepository.save(new Confirmation(0L, transaction, recipientUser, false, new Date(), null));
+        //confirmationRepository.save(new Confirmation(0L, transaction, recipientUser, false, new Date(), null));
         //adminConfirm
         confirmationRepository.save(new Confirmation(0L, transaction, adminUser, false, new Date(), null));
         return transactionRepository.findById(transaction.getId()).orElse(null);
