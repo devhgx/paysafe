@@ -21,6 +21,6 @@ public class UserRepositoryCustomImpl {
                 "WHERE u.username = ?";
         //jdbcTemplate.queryForObject
         return jdbcTemplate.query(queryString,
-                BeanPropertyRowMapper.newInstance(UserSummaryModel.class), new Object[]{username} );
+                BeanPropertyRowMapper.newInstance(UserSummaryModel.class), username);
     }
 }

@@ -83,7 +83,7 @@ public class AuthTokenFilter extends OncePerRequestFilter{
         String headerAuth = request.getHeader(JwtHeader.AUTHORIZATION);
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(JwtHeader.BEARER)) {
-            return headerAuth.substring(7, headerAuth.length());
+            return headerAuth.substring(7);
         }
 
         return null;

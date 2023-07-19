@@ -17,6 +17,9 @@ public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     @Getter
     @Setter
+    public Collection<? extends GrantedAuthority> authorities;
+    @Getter
+    @Setter
     private Long id;
     @Getter
     @Setter
@@ -28,9 +31,6 @@ public class UserDetailsImpl implements UserDetails {
     @Getter
     @Setter
     private String phoneNumber;
-    @Getter
-    @Setter
-    public Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(
             Long id,
