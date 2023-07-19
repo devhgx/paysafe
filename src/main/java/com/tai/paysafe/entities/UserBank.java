@@ -46,7 +46,7 @@ public class UserBank {
     private Date updatedDate;
 
     @PrePersist
-    protected void onCreate() throws NoSuchAlgorithmException {
+    protected void onCreate()   {
         this.createdDate = new Date();
     }
 

@@ -1,5 +1,6 @@
 package com.tai.paysafe.controller;
 
+import com.tai.paysafe.constants.ResponseStatusMessage;
 import com.tai.paysafe.dto.request.ApproveRequest;
 import com.tai.paysafe.dto.request.DepositRequest;
 import com.tai.paysafe.dto.request.TransferRequest;
@@ -25,35 +26,35 @@ public class TransferController {
 
     @PostMapping("/deposit")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseData> deposit(@Valid @RequestBody DepositRequest depositRequest) throws Exception {
+    public ResponseEntity<ResponseData> deposit(@Valid @RequestBody DepositRequest depositRequest) {
         Long userId = jwtUtil.getClaims().getUserId();
         transactionService.deposit(depositRequest, userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, null));
     }
 
     @PostMapping("/withdraw")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseData> withdraw(@Valid @RequestBody WithdrawRequest withdrawRequest) throws Exception {
+    public ResponseEntity<ResponseData> withdraw(@Valid @RequestBody WithdrawRequest withdrawRequest)   {
         Long userId = jwtUtil.getClaims().getUserId();
         transactionService.withdraw(withdrawRequest, userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, null));
     }
     @PostMapping("/toUsername")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseData> transfer(@Valid @RequestBody TransferRequest transferRequest) throws Exception {
+    public ResponseEntity<ResponseData> transfer(@Valid @RequestBody TransferRequest transferRequest)  {
         Long userId = jwtUtil.getClaims().getUserId();
         transactionService.transfer(transferRequest, userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, null));
     }
 
     @PostMapping("/approve")
     @PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseData> approveFromUser(@Valid @RequestBody ApproveRequest approveRequest) throws Exception {
+    public ResponseEntity<ResponseData> approveFromUser(@Valid @RequestBody ApproveRequest approveRequest)   {
         var jwt = jwtUtil.getClaims();
         String role = jwt.getRole();
         Long userId = jwt.getUserId();
         transactionService.approve(approveRequest.getTransactionId(), userId, role);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, null));
     }
 
 

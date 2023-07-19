@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Date;
 
@@ -35,7 +34,7 @@ public class RefreshToken  {
     private Date updatedDate;
 
     @PrePersist
-    protected void onCreate() throws NoSuchAlgorithmException {
+    protected void onCreate() {
         this.createdDate = new Date();
     }
 

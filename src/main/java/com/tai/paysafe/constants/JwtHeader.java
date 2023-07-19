@@ -1,7 +1,8 @@
 package com.tai.paysafe.constants;
 
-public class JwtHeader {
-    public static String AUTHORIZATION  = "Authorization";
-    public static String REFRESH_TOKEN  = "RefreshToken";
-    public static String BEARER  = "Bearer ";
+public final class JwtHeader {
+    JwtHeader(){}
+    public final static String AUTHORIZATION  = "Authorization";
+    public final static String REFRESH_TOKEN  = "RefreshToken";
+    public final static String BEARER  = "Bearer ";
 }

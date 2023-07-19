@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class UserSummaryModel {
-    public String username;
-    public String accountName;
+    private String username;
+    private String accountName;
 }

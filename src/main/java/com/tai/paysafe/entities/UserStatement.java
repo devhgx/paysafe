@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 @Entity
 @Table(name = "user_statement")
@@ -44,7 +43,7 @@ public class UserStatement {
     private Date updatedDate;
 
     @PrePersist
-    protected void onCreate() throws NoSuchAlgorithmException {
+    protected void onCreate() {
         this.createdDate = new Date();
     }
 

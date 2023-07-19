@@ -41,7 +41,7 @@ public class Confirmation {
 
 
     @PrePersist
-    protected void onCreate() throws NoSuchAlgorithmException {
+    protected void onCreate()  {
         this.createdDate = new Date();
     }
 

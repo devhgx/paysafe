@@ -60,6 +60,6 @@ public class AuthenController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseData> logout() {
         Long userId = jwtUtil.getClaims().getUserId();
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", refreshTokenService.deleteRefreshToken(userId)));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, refreshTokenService.deleteRefreshToken(userId)));
     }
 }

@@ -1,18 +1,16 @@
 package com.tai.paysafe.controller;
 
+import com.tai.paysafe.constants.ResponseStatusMessage;
 import com.tai.paysafe.constants.RoleType;
 import com.tai.paysafe.dto.response.RegistrationRequest;
 import com.tai.paysafe.dto.response.ResponseData;
 import com.tai.paysafe.entities.User;
 import com.tai.paysafe.entities.UserBank;
-import com.tai.paysafe.entities.UserStatement;
-import com.tai.paysafe.repository.UserBankRepository;
 import com.tai.paysafe.repository.UserRepositoryCustomImpl;
 import com.tai.paysafe.service.UserService;
 import com.tai.paysafe.service.UserStatementService;
 import com.tai.paysafe.utils.JwtUtil;
 import jakarta.validation.Valid;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -38,18 +36,17 @@ public class UserController {
     private UserRepositoryCustomImpl userRepositoryCustom;
 
 
-
     // register user profile
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
+    public ResponseEntity<ResponseData> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
         User data = userService.create(registrationRequest, RoleType.USER);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseData(HttpStatus.OK.value(), "success", data));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, data));
     }
 
     @GetMapping("/test")
-    public ResponseEntity<ResponseData> registerAdmin( ) {
-        var data =  userRepositoryCustom.getUserSummaryModelByUsername("buyyer");
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+    public ResponseEntity<ResponseData> registerAdmin() {
+        var data = userRepositoryCustom.getUserSummaryModelByUsername("buyyer");
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, data));
     }
 
     // get user profile
@@ -58,7 +55,7 @@ public class UserController {
     public ResponseEntity<ResponseData> getProfile() {
         Long userId = jwtUtil.getClaims().getUserId();
         User data = userService.findById(userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, data));
     }
 
     @GetMapping("/getUserBanks")
@@ -66,7 +63,7 @@ public class UserController {
     public ResponseEntity<ResponseData> getUserBanks() {
         Long userId = jwtUtil.getClaims().getUserId();
         List<UserBank> data = userService.getUserBanks(userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, data));
     }
 
 

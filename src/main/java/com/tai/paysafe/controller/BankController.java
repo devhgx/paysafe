@@ -1,5 +1,6 @@
 package com.tai.paysafe.controller;
 
+import com.tai.paysafe.constants.ResponseStatusMessage;
 import com.tai.paysafe.dto.request.BankRequest;
 import com.tai.paysafe.dto.response.ResponseData;
 import com.tai.paysafe.service.BankService;
@@ -17,26 +18,11 @@ public class BankController {
 
     private BankService bankService;
 
-//    @PostMapping
-//    public ResponseEntity<?> createBank(@RequestBody BankRequest bank) {
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", bankService.createBank(bank)));
-//    }
-
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getBank() {
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", bankService.getBanks()));
+    public ResponseEntity<ResponseData> getBank() {
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, bankService.getBanks()));
     }
 
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateBank(@PathVariable Long id, @RequestBody BankRequest bank) {
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", bankService.updateBank(id, bank)));
-//    }
-
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> deleteBank(@PathVariable Long id) {
-//        bankService.deleteBank(id);
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", null));
-//    }
 }

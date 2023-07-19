@@ -23,7 +23,7 @@ public class UserStatementController {
 
     @GetMapping("/listActive")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getStatementActiveByUser() {
+    public ResponseEntity<ResponseData> getStatementActiveByUser() {
         var jwt = jwtUtil.getClaims();
         Long userId = jwt.getUserId();
         return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", userStatementService.getStatementByUserId(userId)));
@@ -31,7 +31,7 @@ public class UserStatementController {
 
     @GetMapping("/listAll/{pageNumber}/{pageSize}")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> listAll(@Valid @PathVariable("pageNumber") int pageNumber , @Valid @PathVariable("pageSize") int pageSize) {
+    public ResponseEntity<ResponseData> listAll(@Valid @PathVariable("pageNumber") int pageNumber , @Valid @PathVariable("pageSize") int pageSize) {
         var jwt = jwtUtil.getClaims();
         Long userId = jwt.getUserId();
         return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", userStatementService.getStatementAllStatusByUser(pageNumber,pageSize,userId)));

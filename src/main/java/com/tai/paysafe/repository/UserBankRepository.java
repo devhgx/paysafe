@@ -1,6 +1,5 @@
 package com.tai.paysafe.repository;
 
-import com.tai.paysafe.entities.User;
 import com.tai.paysafe.entities.UserBank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

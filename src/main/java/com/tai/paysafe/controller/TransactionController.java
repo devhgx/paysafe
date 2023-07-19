@@ -1,5 +1,6 @@
 package com.tai.paysafe.controller;
 
+import com.tai.paysafe.constants.ResponseStatusMessage;
 import com.tai.paysafe.constants.RoleType;
 import com.tai.paysafe.constants.TransactionProcessStatus;
 import com.tai.paysafe.dto.response.ResponseData;
@@ -28,7 +29,7 @@ public class TransactionController {
     //list transaction
     @GetMapping("/list/{pageNumber}/{pageSize}")
     @PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseData> transactionsList(@Valid @PathVariable("pageNumber") int pageNumber ,@Valid @PathVariable("pageSize") int pageSize) throws Exception {
+    public ResponseEntity<ResponseData> transactionsList(@Valid @PathVariable("pageNumber") int pageNumber ,@Valid @PathVariable("pageSize") int pageSize)  {
         var jwt = jwtUtil.getClaims();
         String role = jwt.getRole();
         Long userId = jwt.getUserId();
@@ -37,16 +38,16 @@ public class TransactionController {
             processStatus = TransactionProcessStatus.ADMIN_APPROVE;
         }
         var data = transactionService.getTransactions( pageNumber, pageSize, processStatus, userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, data));
     }
 
     @GetMapping("/listAll/{pageNumber}/{pageSize}")
     @PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseData> transactionsListAll(@Valid @PathVariable("pageNumber") int pageNumber ,@Valid @PathVariable("pageSize") int pageSize) throws Exception {
+    public ResponseEntity<ResponseData> transactionsListAll(@Valid @PathVariable("pageNumber") int pageNumber ,@Valid @PathVariable("pageSize") int pageSize)   {
         var jwt = jwtUtil.getClaims();
         String role = jwt.getRole();
         Long userId = jwt.getUserId();
         var data = transactionService.getTransactionsAll( pageNumber, pageSize, role, userId);
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, data));
     }
 }

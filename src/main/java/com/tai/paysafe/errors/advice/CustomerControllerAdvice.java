@@ -5,7 +5,6 @@ import com.tai.paysafe.errors.exception.ApproveException;
 import com.tai.paysafe.errors.exception.BadRequstException;
 import com.tai.paysafe.errors.exception.WithdrawException;
 import lombok.extern.slf4j.Slf4j;
-//import org.postgresql.util.PSQLException;
 import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ import java.util.List;
 @RestControllerAdvice
 public class CustomerControllerAdvice {
     private List<String> getErrorList(BindException ex) {
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(error.getField() + ": " + error.getDefaultMessage());
         }

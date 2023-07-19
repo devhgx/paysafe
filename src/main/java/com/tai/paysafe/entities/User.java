@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Set;
 
@@ -56,7 +54,7 @@ public class User {
     private Date updatedDate;
 
     @PrePersist
-    protected void onCreate() throws NoSuchAlgorithmException {
+    protected void onCreate() {
         this.createdDate = new Date();
     }
 

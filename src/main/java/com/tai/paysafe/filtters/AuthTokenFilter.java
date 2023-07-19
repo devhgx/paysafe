@@ -2,6 +2,7 @@ package com.tai.paysafe.filtters;
 
 import com.tai.paysafe.constants.JwtHeader;
 import com.tai.paysafe.entities.RefreshToken;
+import com.tai.paysafe.errors.exception.BadRequstException;
 import com.tai.paysafe.service.RefreshTokenService;
 import com.tai.paysafe.service.impl.UserDetailsServiceImpl;
 import com.tai.paysafe.utils.JwtUtil;
@@ -48,21 +49,22 @@ public class AuthTokenFilter extends OncePerRequestFilter{
 
 
             if(refreshTokenOpt.isPresent()){
-                RefreshToken refreshToken = refreshTokenService.verifyExpiration(refreshTokenOpt.get());
+                // RefreshToken refreshToken =
+                refreshTokenService.verifyExpiration(refreshTokenOpt.get());
             }
 
             if ((jwt != null && jwtUtil.validateJwtToken(jwt)) ) {
                 Long userId = jwtUtil.getUserIdFromJwtToken(jwt);
                 if (userId == 0) {
                     log.error("AuthTokenFilter cannot found userid in token");
-                    throw new Exception("AuthTokenFilter cannot found userid in token");
+                    throw new BadRequstException("AuthTokenFilter cannot found userid in token");
                 }
                 Claims claims = jwtUtil.extractJwtData(jwt);
                 String role = (String)claims.get("role");
                 UserDetails userDetails = userDetailsService.loadUserByUserId(userId);
-                if (!userDetails.getAuthorities().stream().anyMatch(x->x.getAuthority().equals(role))) {
+                if (userDetails.getAuthorities().stream().noneMatch(x->x.getAuthority().equals(role))) {
                     log.error("AuthTokenFilter invalid role");
-                    throw new Exception("AuthTokenFilter invalid role");
+                    throw new BadRequstException("AuthTokenFilter invalid role");
                 }
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
