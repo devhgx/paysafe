@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -84,6 +82,12 @@ public class UserServiceImpl implements UserService {
             user.setUserBanks(new HashSet<>(userNank));
         }
         return user;
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        Set<User> users = userRepository.getAllUser().orElse( new HashSet<>());
+        return users.stream().toList();
     }
 
     @Override

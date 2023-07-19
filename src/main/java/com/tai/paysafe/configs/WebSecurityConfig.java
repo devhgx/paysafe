@@ -1,6 +1,8 @@
 package com.tai.paysafe.configs;
 
 import com.tai.paysafe.filtters.AuthTokenFilter;
+import com.tai.paysafe.service.impl.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +30,12 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig {
-    @Autowired
-    @Lazy
-    UserDetailsService userDetailsService;
+//    @Autowired
+//    @Lazy
+//    UserDetailsService userDetailsService;
+    final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -51,7 +55,7 @@ public class WebSecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setUserDetailsService(userDetailsServiceImpl::loadUserByUsername);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -73,8 +77,9 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        String[] whitelist = new String[]{
+        String[] whiteList = new String[]{
                 "/api/auth/login",
+                "/api/user/test",
                 "/api/user/register",
                 "/v3/api-docs",
                 "/swagger-ui/**",
@@ -85,7 +90,7 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                        .requestMatchers(whitelist).permitAll()
+                        .requestMatchers(whiteList).permitAll()
                         .anyRequest().authenticated()
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(x->x.authenticationEntryPoint(new AuthEntryPointJwt()));

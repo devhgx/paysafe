@@ -7,6 +7,7 @@ import com.tai.paysafe.entities.User;
 import com.tai.paysafe.entities.UserBank;
 import com.tai.paysafe.entities.UserStatement;
 import com.tai.paysafe.repository.UserBankRepository;
+import com.tai.paysafe.repository.UserRepositoryCustomImpl;
 import com.tai.paysafe.service.UserService;
 import com.tai.paysafe.service.UserStatementService;
 import com.tai.paysafe.utils.JwtUtil;
@@ -33,6 +34,9 @@ public class UserController {
     @Autowired
     private UserStatementService userStatementService;
 
+    @Autowired
+    private UserRepositoryCustomImpl userRepositoryCustom;
+
 
 
     // register user profile
@@ -42,12 +46,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseData(HttpStatus.OK.value(), "success", data));
     }
 
-//    @PostMapping("/registerAdmin")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public ResponseEntity<ResponseData> registerAdmin(@Valid @RequestBody RegistrationRequest registrationRequest) {
-//        User data = userService.create(registrationRequest, RoleType.ADMIN);
-//        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
-//    }
+    @GetMapping("/test")
+    public ResponseEntity<ResponseData> registerAdmin( ) {
+        var data =  userRepositoryCustom.getUserSummaryModelByUsername("buyyer");
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", data));
+    }
 
     // get user profile
     @GetMapping("/getProfile")

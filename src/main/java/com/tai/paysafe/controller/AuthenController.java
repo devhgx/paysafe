@@ -1,5 +1,6 @@
 package com.tai.paysafe.controller;
 
+import com.tai.paysafe.constants.ResponseStatusMessage;
 import com.tai.paysafe.dto.request.LoginRequest;
 import com.tai.paysafe.dto.request.TokenRefreshRequest;
 import com.tai.paysafe.dto.response.JwtResponse;
@@ -32,7 +33,7 @@ public class AuthenController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
+    public ResponseEntity<ResponseData> login(@Valid @RequestBody LoginRequest req) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -41,17 +42,17 @@ public class AuthenController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", new JwtResponse(refreshToken.getToken(), jwt)));
+        return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, new JwtResponse(refreshToken.getToken(), jwt)));
 
     }
 
     @PostMapping("/refreshToken")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody TokenRefreshRequest request) {
+    public ResponseEntity<ResponseData> refreshToken(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
         return refreshTokenService.findByToken(requestRefreshToken).map(refreshTokenService::verifyExpiration).map(RefreshToken::getUser).map(user -> {
             String token = jwtUtil.generateToken(user.getId().toString(), user.getRole());
-            return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "success", new TokenRefreshResponse(token, requestRefreshToken)));
+            return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), ResponseStatusMessage.SUCCESS, new TokenRefreshResponse(token, requestRefreshToken)));
         }).orElseThrow(() -> new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!"));
     }
 

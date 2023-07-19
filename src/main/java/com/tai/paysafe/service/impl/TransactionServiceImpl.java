@@ -96,7 +96,7 @@ public class TransactionServiceImpl implements TransactionService {
         userStatementRepository.save(new UserStatement(0L, fromBalance, existFromUserId.getIncome(), existFromUserId.getExpense().add(amount), true, fromUserId, new Date(), null));
         // To
         var toBalance = amount;
-        income = BigDecimal.ZERO;
+        income = amount;
         expense= BigDecimal.ZERO;
         if (existToUserId != null) {
             toBalance = existToUserId.getBalance().add(amount);

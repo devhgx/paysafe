@@ -11,5 +11,6 @@ public interface UserService {
       void deleteUserBank (Long userId) throws Exception;
 
       User findById(Long id);
+      List<User> getAllUser();
       List<UserBank> getUserBanks(Long userId);
 }
