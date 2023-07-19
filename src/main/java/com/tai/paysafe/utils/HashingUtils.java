@@ -5,9 +5,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashingUtils{
-    private static String SHA_256 = "SHA-256";
+    HashingUtils(){}
     public static String hash(String data) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance(SHA_256);
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedHash = digest.digest(data.getBytes(StandardCharsets.UTF_8));
         return bytesToHex(encodedHash);
     }

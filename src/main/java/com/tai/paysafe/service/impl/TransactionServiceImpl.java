@@ -55,8 +55,9 @@ public class TransactionServiceImpl implements TransactionService {
             } else if (transactionType.equals(TransactionType.WITHDRAW)) {
                 balance = exist.getBalance().subtract(amount);
                 if (balance.compareTo(BigDecimal.ZERO) < 0) {
-                    log.error("cannot withdraw , balance less than " + amount);
-                    throw new WithdrawException("cannot withdraw , balance less than " + amount);
+                    var errorText = "cannot withdraw , balance less than " + amount;
+                    log.error(errorText);
+                    throw new WithdrawException(errorText);
                 }
 
             }
@@ -87,8 +88,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         // From
         var fromBalance = existFromUserId.getBalance().subtract(amount);
-        var income = BigDecimal.ZERO;
-        var expense= BigDecimal.ZERO;
         if (fromBalance.compareTo(BigDecimal.ZERO) < 0) {
             log.error("cannot withdraw , balance less than " + amount);
             throw new WithdrawException("cannot withdraw , balance less than " + amount);
@@ -96,8 +95,8 @@ public class TransactionServiceImpl implements TransactionService {
         userStatementRepository.save(new UserStatement(0L, fromBalance, existFromUserId.getIncome(), existFromUserId.getExpense().add(amount), true, fromUserId, new Date(), null));
         // To
         var toBalance = amount;
-        income = amount;
-        expense= BigDecimal.ZERO;
+        var income = amount;
+        var expense= BigDecimal.ZERO;
         if (existToUserId != null) {
             toBalance = existToUserId.getBalance().add(amount);
             income = existToUserId.getIncome().add(amount);
@@ -141,7 +140,7 @@ public class TransactionServiceImpl implements TransactionService {
         var transaction = new Transaction(0L, TransactionType.TRANSFER, transferRequest.getAmount(), false, TransactionProcessStatus.ADMIN_APPROVE, null, null, null, null, senderUser, recipientUser, transferRequest.getNote(), new Date(), null);
         transaction = transactionRepository.save(transaction);
         //recipientConfirm
-        //confirmationRepository.save(new Confirmation(0L, transaction, recipientUser, false, new Date(), null));
+
         //adminConfirm
         confirmationRepository.save(new Confirmation(0L, transaction, adminUser, false, new Date(), null));
         return transactionRepository.findById(transaction.getId()).orElse(null);
@@ -152,8 +151,9 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction approve(Long id, Long userId, String role) {
         var transaction = transactionRepository.findById(id).orElseThrow(() -> new NotFoundException("not found transaction "));
         if (!transaction.getTransactionType().equals(TransactionType.TRANSFER)) {
-            log.error(String.format("cannot approve TransactionType: %s , id = %d ", transaction.getTransactionType(), transaction.getId()));
-            throw new ApproveException(String.format("cannot approve TransactionType: %s , id =  ", transaction.getTransactionType(), transaction.getId()));
+            var errorText = String.format("cannot approve TransactionType: %s , id =  ", transaction.getTransactionType(), transaction.getId());
+            log.error(errorText);
+            throw new ApproveException(errorText);
         }
 
         if (role.equals(RoleType.ADMIN) && transaction.getProcessStatus() == TransactionProcessStatus.ADMIN_APPROVE) {
@@ -163,8 +163,9 @@ public class TransactionServiceImpl implements TransactionService {
         } else if (role.equals(RoleType.USER) && transaction.getProcessStatus() == TransactionProcessStatus.USER_APPROVE) {
             transaction.setProcessStatus(TransactionProcessStatus.ADMIN_APPROVE);
         } else {
-            log.error(String.format("cannot withdraw ProcessStatus: %s , id = %d ", transaction.getProcessStatus(), transaction.getId()));
-            throw new ApproveException(String.format("cannot withdraw ProcessStatus: %s , id =  ", transaction.getProcessStatus(), transaction.getId()));
+            var errorText = String.format("cannot withdraw ProcessStatus: %s , id = %d ", transaction.getProcessStatus(), transaction.getId());
+            log.error(errorText);
+            throw new ApproveException(errorText);
         }
         var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("not found sender user " + userId));
         var confirm = confirmationRepository.findByUserAndTransaction(user, transaction).get();
@@ -179,8 +180,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Page<Transaction> getTransactions(int pageNumber, int pageSize, int processStatus, Long userId) {
         if (pageNumber < 0 || pageSize < 0) {
-            log.error("limit or page = 0");
-            throw new BadRequstException("limit or page = 0");
+            var errorText = "limit or page = 0";
+            log.error(errorText);
+            throw new BadRequstException(errorText);
         }
         Sort sort = Sort.by("id").descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);

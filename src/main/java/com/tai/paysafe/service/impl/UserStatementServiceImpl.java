@@ -2,6 +2,7 @@ package com.tai.paysafe.service.impl;
 
 import com.tai.paysafe.entities.UserStatement;
 import com.tai.paysafe.errors.exception.BadRequstException;
+import com.tai.paysafe.errors.exception.ErrorException;
 import com.tai.paysafe.repository.UserRepository;
 import com.tai.paysafe.repository.UserStatementRepository;
 import com.tai.paysafe.service.UserStatementService;
@@ -30,8 +31,14 @@ public class UserStatementServiceImpl implements UserStatementService {
     @Transactional
     @Override
     public UserStatement createStatement(UserStatement userStatement, Long userId) {
-        var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
-        var current = userStatementRepository.findByUserAndActiveStatus(userId, true).get();
+        var user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new NotFoundException("not found user");
+        }
+        var current = userStatementRepository.findByUserAndActiveStatus(userId, true).orElse(null);
+        if (current == null) {
+            throw new NotFoundException("not found user statement");
+        }
         current.setActiveStatus(false);
         current.setUpdatedDate(new Date());
         userStatementRepository.save(current);
@@ -57,7 +64,10 @@ public class UserStatementServiceImpl implements UserStatementService {
 
     @Override
     public UserStatement getStatementByUserId(Long userId) {
-        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("not found user"));
+        var user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new NotFoundException("not found user");
+        }
         return userStatementRepository.findByUserAndActiveStatus(userId, true).orElse(null);
     }
 

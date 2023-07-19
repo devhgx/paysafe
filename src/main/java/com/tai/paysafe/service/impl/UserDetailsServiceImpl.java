@@ -29,12 +29,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserByUserId(Long userId) throws UsernameNotFoundException {
-        User user = this.userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    log.error("User Not Found with userid : " + userId);
-                    new UsernameNotFoundException("User Not Found with userid : " + userId);
-                    return null;
-                });
+        User user = this.userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            log.error("User Not Found with userid : " + userId);
+            throw new UsernameNotFoundException("User Not Found with userid : " + userId);
+        }
 
         return UserDetailsImpl.build(user);
     }

@@ -3,6 +3,7 @@ package com.tai.paysafe.service.impl;
 import com.tai.paysafe.dto.response.RegistrationRequest;
 import com.tai.paysafe.entities.User;
 import com.tai.paysafe.entities.UserBank;
+import com.tai.paysafe.errors.exception.ErrorException;
 import com.tai.paysafe.repository.BankRepository;
 import com.tai.paysafe.repository.UserBankRepository;
 import com.tai.paysafe.repository.UserRepository;
@@ -63,12 +64,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUserBank(Long userId) throws Exception {
+    public void deleteUserBank(Long userId) throws ErrorException {
         var user = userRepository.findById(userId).get();
         var userBanks = user.getUserBanks();
         if (userBanks == null) {
             log.error("not found book bank");
-            throw new Exception("not found book bank");
+            throw new ErrorException("not found book bank");
         }
         user.setUserBanks(null);
         userBankRepository.deleteAll(userBanks);

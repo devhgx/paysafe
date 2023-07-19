@@ -1,5 +1,6 @@
 package com.tai.paysafe.utils;
 
+import com.tai.paysafe.errors.exception.ErrorException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 @Slf4j
 @Component
 public class DateUtil {
+    DateUtil(){}
     public static Timestamp getCurrentDate() {
         Timestamp today = null;
         try {
@@ -17,7 +19,7 @@ public class DateUtil {
             today = new Timestamp(nowDate.getTime());
         } catch (Exception e) {
             log.error("error msg : {} ", e);
-            throw new RuntimeException(e);
+            throw new ErrorException(e.getMessage());
         }
         return today;
     }

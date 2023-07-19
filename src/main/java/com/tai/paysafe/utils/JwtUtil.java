@@ -14,8 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Map; 
 
 
 @Slf4j
@@ -35,7 +34,7 @@ public class JwtUtil {
     public String generateJwtToken(Authentication authentication) {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userPrincipal.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+        List<String> roles = userPrincipal.getAuthorities().stream().map(item -> item.getAuthority()).toList());
         return generateToken(userPrincipal.getId().toString(), String.join(",", roles ));
     }
 
