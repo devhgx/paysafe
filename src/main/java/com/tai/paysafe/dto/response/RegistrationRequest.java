@@ -1,7 +1,7 @@
 package com.tai.paysafe.dto.response;
 
 import com.tai.paysafe.constants.RegexpRequest;
-import com.tai.paysafe.constants.ReponseErrorMessage;
+import com.tai.paysafe.constants.ResponseErrorMessage;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -11,14 +11,14 @@ import lombok.Data;
 
 @Data
 public class RegistrationRequest {
-    @NotNull(message = ReponseErrorMessage.USERNAME)
-    @Pattern(regexp = RegexpRequest.USERNAME, message = ReponseErrorMessage.USERNAME)
+    @NotNull(message = ResponseErrorMessage.USERNAME)
+    @Pattern(regexp = RegexpRequest.USERNAME, message = ResponseErrorMessage.USERNAME)
     private String username;
-    @NotNull(message = ReponseErrorMessage.USER_EMAIL)
-    @Email(message = ReponseErrorMessage.USER_EMAIL)
+    @NotNull(message = ResponseErrorMessage.USER_EMAIL)
+    @Email(message = ResponseErrorMessage.USER_EMAIL)
     private String email;
-    @NotNull(message = ReponseErrorMessage.USER_PASSWORD)
-    @Pattern(regexp = RegexpRequest.USER_PASSWORD, message = ReponseErrorMessage.USER_PASSWORD)
+    @NotNull(message = ResponseErrorMessage.USER_PASSWORD)
+    @Pattern(regexp = RegexpRequest.USER_PASSWORD, message = ResponseErrorMessage.USER_PASSWORD)
     private String password;
     @NotNull
     @NotEmpty
